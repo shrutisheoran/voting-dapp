@@ -11,3 +11,8 @@
 1. We can check the deployed smart contract by running `truffle console`.
 
 1. In the console we have to first create an __app__ variable with the running instance of the block chain. So for that run `Election.deployed().then(i => {app=i});`. 
+
+
+### Testing app
+
+To test the app run the command `truffle test`
