@@ -35,7 +35,12 @@ contract("Election", accounts => {
         electionInstance = instance;
         return electionInstance.vote(candidateId, { from: accounts[0] });
       })
-      .then(receipt => electionInstance.voters(accounts[0]))
+      .then(receipt => {
+        assert.equal(receipt.logs.length, 1, "an event was triggered");
+        assert.equal(receipt.logs[0].event, "votedEvent", "the event type is correct");
+        assert.equal(receipt.logs[0].args._candidateId.toNumber(), candidateId, "the candidate id is correct");
+        return electionInstance.voters(accounts[0]);
+      })
       .then(voted => {
         assert(voted, "the voter was marked as voted");
         return electionInstance.candidates(candidateId);
