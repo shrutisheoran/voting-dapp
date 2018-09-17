@@ -1,85 +1,47 @@
-var config = require("./config.js");
-const fs = require("fs");
-// config.web3.eth.
+const express = require("express");
+const bodyParser = require("body-parser");
 
-let web3Provider = null;
-// let contracts = {};
-let account = "0x0";
-let myContInstance;
+const bc = require("./blockchain_handler");
 
-// creates a contact instance
-const initContract = () => {
-  let contractJSON = fs.readFileSync(
-    "../ethereum-blockchain/build/contracts/Election.json",
-    "utf8"
-  );
-  contractJSON = JSON.parse(contractJSON);
-  const MyContract = config.web3.eth.contract(contractJSON.abi);
-  myContInstance = MyContract.at("0xcd21f84d876c1cc09c3630c76dffd2f31731fe7f");
-  console.log(myContInstance.candidates(1)[2].toNumber());
-};
+bcInstance = bc.initContract();
+// console.log(bcInstance.candidates(1)[2].toNumber());
 
-const init = function() {
-  return initWeb3();
-};
+let app = express();
 
-const render = () => {
-  var electionInstance;
-  var loader = $("#loader");
-  var content = $("#content");
+app.use((req, res, next) => {
+  const now = new Date().toString();
 
-  loader.show();
-  content.hide();
+  console.log(`${now} ${req.method} ${req.url}`);
+  next();
+});
 
-  // Load account data
-  web3.eth.getCoinbase((err, account) => {
-    if (err === null) {
-      account = account;
-      $("#accountAddress").html("Your Account: " + account);
-    }
-  });
+app.use(bodyParser.json());
 
-  // Load contract data
-  contracts.Election.deployed()
-    .then(instance => {
-      electionInstance = instance;
-      return electionInstance.candidatesCount();
-    })
-    .then(candidatesCount => {
-      var candidatesResults = $("#candidatesResults");
-      candidatesResults.empty();
-
-      for (var i = 1; i <= candidatesCount; i++) {
-        electionInstance.candidates(i).then(candidate => {
-          var id = candidate[0];
-          var name = candidate[1];
-          var voteCount = candidate[2];
-
-          // Render candidate Result
-          var candidateTemplate =
-            "<tr><th>" +
-            id +
-            "</th><td>" +
-            name +
-            "</td><td>" +
-            voteCount +
-            "</td></tr>";
-          candidatesResults.append(candidateTemplate);
-        });
-      }
-
-      loader.hide();
-      content.show();
-    })
-    .catch(error => {
-      console.warn(error);
-    });
-};
-
-// config.web3.eth.getCoinbase((err, acc) => {
-//   if (err == null) {
-//     console.log(acc);
-//   }
+// CORS
+// app.use(function(req, res, next) {
+//   res.header("Access-Control-Allow-Origin", "*");
+//   res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+//   next();
 // });
 
-initContract();
+app.get("/candidates", (req, res) => {
+  bc.getListOfCandidates().then(candidates => res.status(200).send(candidates));
+});
+
+app.post("/vote", (req, res) => {
+  const { voterId, candidateId, aadhar } = req.body;
+  // bcInstance.vote(candidateId, { from: voterId })
+  bc.vote(candidateId, voterId, aadhar)
+    .then(data => {
+      res.status(200).send({ data: data });
+    })
+    .catch(err => {
+      res.status(500).send({ error: err + "" });
+    });
+});
+
+let port = process.env.PORT;
+
+app.listen(port, () => {
+  console.log(`Server is up on port ${port}`);
+});
