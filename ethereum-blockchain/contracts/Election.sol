@@ -8,10 +8,15 @@ contract Election {
         uint voteCount;
     }
 
+    struct Voters {
+        bool voted;
+        address voterId;
+    }
+
     // Map of candidates
     mapping(uint => Candidate) public candidates;
     // map of voters who have voted
-    mapping(address => bool) public voters;
+    mapping(uint => Voters) public voters;
     // storing count of candidates
     uint public candidatesCount;
 
@@ -29,14 +34,16 @@ contract Election {
         candidates[candidatesCount] = Candidate(candidatesCount, _name, 0);
     }
 
-    function vote (uint _candidateId) public {
+    function vote (uint _candidateId, uint _aadhar) public {
         // require that they haven't voted before
-        require(!voters[msg.sender], "Already Voted");
+        require(!voters[_aadhar].voted, "Already Voted");
 
         // require a valid candidate
         require(_candidateId > 0 && _candidateId <= candidatesCount, "Invalid Candidate");
     
-        voters[msg.sender] = true;
+        voters[_aadhar].voted = true;
+        voters[_aadhar].voterId = msg.sender;
+        
         candidates[_candidateId].voteCount++;
 
         emit votedEvent(_candidateId);
