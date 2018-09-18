@@ -2,6 +2,7 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const fs = require("fs");
 const request = require("request");
+const multer = require("multer");
 
 const bc = require("./blockchain_handler");
 
@@ -9,6 +10,11 @@ bcInstance = bc.initContract();
 // console.log(bcInstance.candidates(1)[2].toNumber());
 
 let app = express();
+
+const upload = multer({
+  dest: "/uploads/"
+  // limits: { fileSize: 1000000, files: 1 }
+});
 
 const headers = {
   Accept: "application/json"
@@ -45,23 +51,30 @@ app.post("/vote", (req, res) => {
     });
 });
 
-app.get("/qrdata", (req, res) => {
-  // let imgfile = fs.readFileSync("./qrst.png");
+app.post("/qrdata", upload.single("file"), (req, res) => {
+  const ext = req.file.mimetype.slice(req.file.mimetype.indexOf("/") + 1);
 
-  var formData = {
-    file: fs.createReadStream(__dirname + "/qrst.png")
-  };
+  var file = __dirname + "\\uploads\\" + "test" + "." + ext;
+  fs.rename(req.file.path, file, function(err) {
+    if (err) {
+      console.log(err);
+    } else {
+      const formData = {
+        file: fs.createReadStream(file)
+      };
 
-  request.post(
-    { url: "https://api.qrserver.com/v1/read-qr-code/", formData: formData },
-    (err, httpResponse, body) => {
-      if (err) {
-        res.status(500).send({ err });
-      }
-      let parsedBody = JSON.parse(body);
-      res.status(200).send(JSON.parse(parsedBody[0].symbol[0].data));
+      request.post(
+        { url: "https://api.qrserver.com/v1/read-qr-code/", formData },
+        (err, httpResponse, body) => {
+          if (err) {
+            res.status(500).send({ err });
+          }
+          const parsedBody = JSON.parse(body);
+          res.status(200).send(JSON.parse(parsedBody[0].symbol[0].data));
+        }
+      );
     }
-  );
+  });
 });
 
 let port = process.env.PORT;
