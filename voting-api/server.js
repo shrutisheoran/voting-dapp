@@ -70,7 +70,9 @@ app.post("/qrdata", upload.single("file"), (req, res) => {
             res.status(500).send({ err });
           }
           const parsedBody = JSON.parse(body);
-          res.status(200).send(JSON.parse(parsedBody[0].symbol[0].data));
+          if (parsedBody[0].symbol[0].error == null)
+            res.status(200).send(JSON.parse(parsedBody[0].symbol[0].data));
+          else res.status(400).send({ error: "Cannot parse qr code." });
         }
       );
     }
