@@ -41,12 +41,6 @@ const vote = (candidateId, voterId, aadhar) => {
   });
 };
 
-// config.web3.eth.getCoinbase((err, acc) => {
-//   if (err == null) {
-//     console.log(acc);
-//   }
-// });
-
 module.exports = {
   initContract,
   getListOfCandidates,

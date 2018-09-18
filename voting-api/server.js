@@ -1,5 +1,7 @@
 const express = require("express");
 const bodyParser = require("body-parser");
+const fs = require("fs");
+const request = require("request");
 
 const bc = require("./blockchain_handler");
 
@@ -7,6 +9,10 @@ bcInstance = bc.initContract();
 // console.log(bcInstance.candidates(1)[2].toNumber());
 
 let app = express();
+
+const headers = {
+  Accept: "application/json"
+};
 
 app.use((req, res, next) => {
   const now = new Date().toString();
@@ -30,7 +36,6 @@ app.get("/candidates", (req, res) => {
 
 app.post("/vote", (req, res) => {
   const { voterId, candidateId, aadhar } = req.body;
-  // bcInstance.vote(candidateId, { from: voterId })
   bc.vote(candidateId, voterId, aadhar)
     .then(data => {
       res.status(200).send({ data: data });
@@ -38,6 +43,25 @@ app.post("/vote", (req, res) => {
     .catch(err => {
       res.status(500).send({ error: err + "" });
     });
+});
+
+app.get("/qrdata", (req, res) => {
+  // let imgfile = fs.readFileSync("./qrst.png");
+
+  var formData = {
+    file: fs.createReadStream(__dirname + "/qrst.png")
+  };
+
+  request.post(
+    { url: "https://api.qrserver.com/v1/read-qr-code/", formData: formData },
+    (err, httpResponse, body) => {
+      if (err) {
+        res.status(500).send({ err });
+      }
+      let parsedBody = JSON.parse(body);
+      res.status(200).send(JSON.parse(parsedBody[0].symbol[0].data));
+    }
+  );
 });
 
 let port = process.env.PORT;
