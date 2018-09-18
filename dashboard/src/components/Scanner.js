@@ -1,21 +1,29 @@
 import React, { Component } from "react";
 import Instascan from "instascan";
-
-let scanner = new Instascan.Scanner({
-  video: document.getElementById("preview")
-});
-scanner.addListener("scan", function(content) {
-  console.log(JSON.parse(content));
-  document.getElementById("data").innerHTML = content;
-});
+import { Button } from "react-materialize";
 
 class Scanner extends Component {
+  constructor(props) {
+    super(props);
+    this.videoPrev = React.createRef();
+  }
+
   state = {
     data: {}
   };
-  render() {
+
+  componentDidMount() {
+    let scanner = new Instascan.Scanner({
+      video: this.videoPrev.current
+    });
+    scanner.addListener("scan", content => {
+      console.log(JSON.parse(content));
+      this.setState({
+        data: JSON.parse(content)
+      });
+    });
     Instascan.Camera.getCameras()
-      .then(function(cameras) {
+      .then(cameras => {
         if (cameras.length > 0) {
           try {
             scanner.start(cameras[0]);
@@ -27,13 +35,23 @@ class Scanner extends Component {
           console.error("No cameras found.");
         }
       })
-      .catch(function(e) {
+      .catch(e => {
         console.error(e);
       });
+  }
+  render() {
+    const { name, aadhar, voterId } = this.state.data;
     return (
       <div>
-        <video id="preview" />
-        <p id="data" />
+        <video ref={this.videoPrev} />
+        {name && (
+          <div>
+            <h6>Name: {name}</h6>
+            <h6>Aadhar number: {aadhar}</h6>
+            <h6>Address ID: {voterId}</h6>
+            <Button waves="light">Choose Candidate</Button>
+          </div>
+        )}
       </div>
     );
   }
