@@ -1,6 +1,7 @@
-import React, { Component } from "react";
-import Instascan from "instascan";
-import { Button } from "react-materialize";
+import React, { Component } from 'react';
+import Instascan from 'instascan';
+import { Button } from 'react-materialize';
+import { Link } from 'react-router-dom'
 
 class Scanner extends Component {
   constructor(props) {
@@ -8,19 +9,13 @@ class Scanner extends Component {
     this.videoPrev = React.createRef();
   }
 
-  state = {
-    data: {}
-  };
-
   componentDidMount() {
     let scanner = new Instascan.Scanner({
       video: this.videoPrev.current
     });
     scanner.addListener("scan", content => {
-      console.log(JSON.parse(content));
-      this.setState({
-        data: JSON.parse(content)
-      });
+      Object.keys(this.props.voter).length === 0 && 
+      this.props.onIdentification(JSON.parse(content));
     });
     Instascan.Camera.getCameras()
       .then(cameras => {
@@ -40,16 +35,18 @@ class Scanner extends Component {
       });
   }
   render() {
-    const { name, aadhar, voterId } = this.state.data;
+    const { name, aadhar, voterId } = this.props.voter;
     return (
       <div>
-        <video ref={this.videoPrev} />
+        {Object.keys(this.props.voter).length === 0 && <video ref={this.videoPrev} />}
         {name && (
           <div>
             <h6>Name: {name}</h6>
             <h6>Aadhar number: {aadhar}</h6>
             <h6>Address ID: {voterId}</h6>
-            <Button waves="light">Choose Candidate</Button>
+            <Link to='/vote'>
+              <Button waves="light">Choose Candidate</Button>
+            </Link>
           </div>
         )}
       </div>

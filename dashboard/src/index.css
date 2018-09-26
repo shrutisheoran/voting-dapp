@@ -1,5 +1,37 @@
+@import url('https://fonts.googleapis.com/css?family=Roboto+Condensed');
+@font-face {
+  font-family: 'Roboto Condensed', sans-serif;
+  src: url('https://fonts.googleapis.com/css?family=Roboto+Condensed')
+}
+
 body {
   margin: 0;
   padding: 0;
-  font-family: sans-serif;
+  font-family: 'Roboto Condensed', sans-serif;
+}
+
+.vote-india {
+  background-color:#053449;
+  color: whitesmoke;
+  font-weight: 100;
+}
+
+.dashboard-card {
+  background-image: url('https://cdn1.iconfinder.com/data/icons/pixel-perfect-1/512/33-dashboard-chart-report-annual-512.png');
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
+}
+
+.vote-card {
+  background-image: url('http://chittagongit.com//images/vote-icon/vote-icon-3.jpg');
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
+}
+
+.small-header {
+  background-color:#053449;
+  color: whitesmoke;
+  width: 100%;
+  font-size: 2.5em;
+  font-weight: lighter;
 }
