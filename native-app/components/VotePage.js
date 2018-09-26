@@ -1,16 +1,22 @@
 import React, { Component } from 'react'
-import { View, StyleSheet, TouchableOpacity, Text, Image } from 'react-native'
-import RadioForm, {RadioButton, RadioButtonInput, RadioButtonLabel} from 'react-native-simple-radio-button';
-import { purple, white, gray } from '../utils/colors';
-import RadioGroup from 'react-native-custom-radio-group';
- 
+import { View, StyleSheet, TouchableOpacity } from 'react-native'
+import { List, ListItem, Thumbnail, Text, Left, Body, Right, Button } from 'native-base';
+import { purple, white } from '../utils/colors'
+import { EvilIcons } from '@expo/vector-icons'
+
 export default class VotePage extends Component {
     state = {
+        votes: [],
         value: 0,
+        text: 'Vote',
+    }
+    componentDidMount() {
+        const candidates = this.props.navigation.getParam('candidates')
+        this.setState({votes: candidates.map((c) => ({[c[0]]: true}))})
     }
 
     onVote = () => {
-        if(this.state.value === 0) 
+        if (this.state.value === 0)
             alert("Please VOTE!!")
         else {
             this.props.navigation.getParam('onVote')(this.state.value)
@@ -18,80 +24,78 @@ export default class VotePage extends Component {
         }
     }
 
+    onSelection = (value) => {
+        this.setState({value})
+        this.setState((state) => ({
+            votes: state.votes.map((elem) => {
+                const id = Object.keys(elem)[0];
+                return id!==value ? {[id]: false}: {[id]: true}
+            })
+        }))
+    }
+
+    onReset = () => {
+        this.setState((state) => ({
+            votes: state.votes.map((elem) => ({[Object.keys(elem)[0]]: true}))
+        }))
+        this.setState({value: 0})
+    }
+
+    display = (id) => {
+        const obj = this.state.votes.filter((vote) => Object.keys(vote)[0]===id)[0];
+        return obj? obj[id] : false
+    }
+
     render() {
-        console.log(this.state.value);
         const candidates = this.props.navigation.getParam('candidates')
-        const voter = this.props.navigation.getParam('voter')
-        const radioGroupList = candidates.map((elem) => ({
-            label: `${elem[1]}`,
-            value: elem[0],
-        }));
-        //<Image style={{width:50, height:50, borderRadius: 25}} source={{uri: elem[2]}}/>
         return (
-            <View style={styles.container}>
-                <RadioGroup
-                    radioGroupList={radioGroupList}
-                    onChange={(value) => this.setState({value})}
-                    containerStyle={{flexDirection: 'column', alignItems: 'center', padding: 5}}
-                    buttonContainerStyle={{
-                        width: '100%',
-                        marginTop: 8,
-                        shadowColor: '#000',
-                        shadowOffset: { width: 10, height: 10 },
-                        shadowOpacity: 0.8,
-                        shadowRadius: 50,
-                    }}
-                    // buttonTextStyle={{}}
-                    buttonContainerActiveStyle={{borderColor: '#50C878', borderRadius: 0, backgroundColor: '#33cc33'}}
-                    buttonContainerInactiveStyle={{
-                        borderColor: '#fff',
-                        borderRadius: 0,
-                    }}
-                    buttonTextActiveStyle={{
-                        fontSize: 20,
-                        fontWeight: '100'
-                    }}
-                    buttonTextInactiveStyle={{color: purple}}
-                />
+            <View>
+                <List>
+                    {
+                        candidates.map((elem) => (
+                            <ListItem thumbnail key={elem[0]}>
+                                <Left>
+                                <Thumbnail square source={{ uri: elem[2] }} />
+                                </Left>
+                                <Body>
+                                <Text>{elem[1]}</Text>
+                                <Text note numberOfLines={1}>CandidateId: {elem[0]}</Text>
+                                </Body>
+                                <Right>
+                                    {
+                                        this.display(elem[0])
+                                        ?<Button transparent onPress={() => this.onSelection(elem[0])}>
+                                            <Text>{this.state.text}</Text>
+                                        </Button>
+                                        : <Text></Text>
+                                    }
+                                </Right>
+                            </ListItem>
+                        ))
+                    }
+                </List>
                 <View style={styles.btnView}>
-                    <TouchableOpacity
-                        style={styles.submitBtn}
-                        onPress={this.onVote}
-                    >
-                        <Text style={styles.submitBtnText}>VOTE</Text>
+                    {
+                        this.state.value
+                        ? <TouchableOpacity style={[styles.submitBtn, {marginRight: '5%', marginLeft: '-17%'}]} onPress={this.onReset}>
+                            <Text style={styles.submitBtnText}>Reset</Text>
+                        </TouchableOpacity>
+                        : <Text></Text>
+                    }
+                    <TouchableOpacity style={styles.submitBtn} onPress={this.onVote} >
+                        <Text style={styles.submitBtnText}>Submit</Text>
                     </TouchableOpacity>
                 </View>
             </View>
-        )
+        );
     }
 }
 
 const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-    },
-    radioContainer: {
-        flexDirection: 'column',
-        paddingTop: 5,
-        width: '96%',
-        marginLeft: '2%'
-    },
-    btns: {
-        backgroundColor: white,
-        shadowColor: '#000',
-        shadowOffset: { width: 10, height: 10 },
-        shadowOpacity: 0.8,
-        shadowRadius: 50,
-    },
-    buttonStyle: {
-        marginTop: 13,
-        marginRight: 20
-    },
-    labelStyle: {
-        marginRight: 20
-    },
     btnView: {
         alignItems: 'center',
+        flexDirection: 'row',
+        marginLeft: '35%'
     },
     submitBtn: {
         marginTop: 20,
@@ -110,38 +114,17 @@ const styles = StyleSheet.create({
         fontSize: 15,
         textAlign: 'center'
     },
+    resetBtn: {
+        marginTop: 20,
+        backgroundColor: purple,
+        padding: 10,
+        paddingLeft: 20,
+        paddingRight: 20,
+        borderRadius: 2,
+        height: 40,
+        marginRight: '5%',
+        alignSelf: 'center',
+        justifyContent: 'center',
+        alignItems: 'center'
+    }
 })
-
-{/* <RadioForm style={styles.radioButton}
-                    // formHorizontal={true}
-                    animation={true}
-                >
-                    {candidates.map((elem) => (
-                        <View style={styles.box} key={elem[0]} >
-                        <RadioButton style={styles.btns} labelHorizontal={true} >
-                            <RadioButtonInput
-                                obj={{label: elem[1], value: elem[0]}}
-                                index={elem[0]}
-                                isSelected={this.state.value === elem[0]}
-                                onPress={(value) => this.setState({value})}
-                                borderWidth={1}
-                                buttonInnerColor={ purple }
-                                buttonOuterColor={ '#000' }
-                                buttonSize={15}
-                                buttonOuterSize={20}
-                                buttonStyle={styles.buttonStyle}
-                                buttonWrapStyle={{marginLeft: 10}}
-                            />
-                            <RadioButtonLabel
-                                obj={{label: elem[1], value: elem[0]}}
-                                index={elem[0]}
-                                onPress={(value) => this.setState({value})}
-                                labelHorizontal={true}
-                                labelStyle={{fontSize: 20, color: '#000'}}
-                                labelWrapStyle={styles.labelStyle}
-                            />
-                            <Image style={{width:50, height:50, borderRadius: 25}} source={{uri: elem[2]}}/>
-                        </RadioButton>
-                        </View>
-                    ))}
-                </RadioForm> */}
