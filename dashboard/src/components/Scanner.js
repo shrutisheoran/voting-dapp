@@ -1,7 +1,7 @@
-import React, { Component } from 'react';
-import Instascan from 'instascan';
-import { Button } from 'react-materialize';
-import { Link } from 'react-router-dom'
+import React, { Component } from "react";
+import Instascan from "instascan";
+import ShowData from "./ShowData";
+import { Row, Col } from "react-materialize";
 
 class Scanner extends Component {
   constructor(props) {
@@ -14,8 +14,8 @@ class Scanner extends Component {
       video: this.videoPrev.current
     });
     scanner.addListener("scan", content => {
-      Object.keys(this.props.voter).length === 0 && 
-      this.props.onIdentification(JSON.parse(content));
+      Object.keys(this.props.voter).length === 0 &&
+        this.props.onIdentification(JSON.parse(content));
     });
     Instascan.Camera.getCameras()
       .then(cameras => {
@@ -36,19 +36,35 @@ class Scanner extends Component {
   }
   render() {
     const { name, aadhar, voterId } = this.props.voter;
+    // console.log(name, aadhar, voterId);
     return (
       <div>
-        {Object.keys(this.props.voter).length === 0 && <video ref={this.videoPrev} />}
-        {name && (
-          <div>
-            <h6>Name: {name}</h6>
-            <h6>Aadhar number: {aadhar}</h6>
-            <h6>Address ID: {voterId}</h6>
-            <Link to='/vote'>
-              <Button waves="light">Choose Candidate</Button>
-            </Link>
-          </div>
-        )}
+        <Row>
+          <Col
+            s={12}
+            m={12}
+            style={{
+              textAlign: "center",
+              backgroundColor: "#053449",
+              color: "white"
+            }}
+          >
+            <h2>Scan Your QR code!</h2>
+          </Col>
+        </Row>
+        <Row style={{ marginTop: "5%" }}>
+          {Object.keys(this.props.voter).length === 0 && (
+            <video ref={this.videoPrev} />
+          )}
+          {name && (
+            <ShowData
+              name={name}
+              aadhar={aadhar}
+              voterId={voterId}
+              message="Voter Details!"
+            />
+          )}
+        </Row>
       </div>
     );
   }
