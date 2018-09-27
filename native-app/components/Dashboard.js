@@ -2,37 +2,13 @@ import React, { Component } from 'react'
 import { ScrollView } from 'react-native'
 import { List, ListItem, Thumbnail, Text, Left, Body, Right, Button } from 'native-base';
 import { purple, gray, orange, white } from '../utils/colors';
-import { RkTheme } from 'react-native-ui-kitten';
-import DoughnutChart from './DoughnutChart'
 
 export default class Dashboard extends Component{
     state = {
-        candidates: [
-            [
-                "1",
-                "Candidate 1",
-                "0",
-                "https://images.vexels.com/media/users/3/136532/isolated/preview/93b5c734e3776dd11f18ca2c42c54000-owl-round-icon-by-vexels.png"
-              ],
-              [
-                "2",
-                "Candidate 2",
-                "1",
-                "http://clipart-library.com/images/LTdojebac.jpg"
-              ],
-              [
-                "3",
-                "Candidate 3",
-                "0",
-                "https://cdn4.iconfinder.com/data/icons/school-education-14/512/Icon_51-512.png"
-              ],
-              [
-                "4",
-                "Candidate 4",
-                "1",
-                "https://images-na.ssl-images-amazon.com/images/I/51Mwpo7I72L._SX425_.jpg"
-              ]
-        ]
+        candidates: []
+    }
+    componentDidMount() {
+        this.setState({candidates: this.props.navigation.getParam('candidates')});
     }
     render() {
         const { candidates } = this.state
@@ -46,7 +22,6 @@ export default class Dashboard extends Component{
         }));
         return (
             <ScrollView>
-                <DoughnutChart data={chartData}/>
                 <List>
                     {
                         candidates.map((elem) => (

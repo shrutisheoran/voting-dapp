@@ -19,13 +19,19 @@ export default class DoughnutChart extends RkComponent {
   fontSize = 15;
 
   componentDidMount() {
-    this.setState({
-        data: this.props.data
-    })
-    // console.log(this.props.data)
+    const candidates = this.props.navigation.getParam('candidates')
+    const colors = ['#ff6b5d', '#8b98ff', '#c2d521', '#ffd147']
+    const data = candidates.map((candidate, index) => ({
+        x: candidate[0],
+        y: candidate[2],
+        title: `${candidate[1]}: ${candidate[2]}`,
+        name: candidate[1],
+        color: colors[index],
+    }));
+    this.setState({data})
   }
 
-  computeColors = () => this.props.data.map(i => i.color);
+  computeColors = () => this.state.data.map(i => i.color);
 
   onPeopleChartPressed = (event, props) => {
     this.setState({
@@ -33,7 +39,7 @@ export default class DoughnutChart extends RkComponent {
     });
   };
 
-  renderMarkdown = () => this.props.data.map(this.renderMarkdownItem);
+  renderMarkdown = () => this.state.data.map(this.renderMarkdownItem);
 
   renderMarkdownItem = (item) => (
     <View key={item.name} style={styles.legendItem}>
@@ -42,47 +48,52 @@ export default class DoughnutChart extends RkComponent {
     </View>
   );
 
-  render = () => (
-    <View>
-      <RkText rkType='header4'>ELECTION RESULTS</RkText>
-      <View style={{ alignSelf: 'center' }}>
-        <Svg width={scale(this.size)} height={scale(this.size)}>
-          <VictoryPie
-            labels={[]}
-            width={scale(this.size)}
-            height={scale(this.size)}
-            colorScale={this.computeColors()}
-            data={this.props.data}
-            standalone={false}
-            padding={scale(25)}
-            innerRadius={scale(70)}
-            events={[{
-              target: 'data',
-              eventHandlers: {
-                onPressIn: this.onPeopleChartPressed,
-              },
-            }]}
-          />
-          <SvgText
-            textAnchor="middle"
-            verticalAnchor="middle"
-            x={scale(this.size / 2)}
-            y={scale(this.size / 2)}
-            height={scale(this.fontSize)}
-            fontSize={scale(this.fontSize)}
-            // fontFamily={RkTheme.current.fonts.family.regular}
-            // stroke={RkTheme.current.colors.text.base}
-            // fill={RkTheme.current.colors.text.base}
-            >
-            {this.props.data[this.state.selected].title}
-          </SvgText>
-        </Svg>
+  render() {
+    if(this.state.data.length)
+      return (
+      <View>
+        <RkText rkType='header4'>ELECTION RESULTS</RkText>
+        <View style={{ alignSelf: 'center' }}>
+          <Svg width={scale(this.size)} height={scale(this.size)}>
+            <VictoryPie
+              labels={[]}
+              width={scale(this.size)}
+              height={scale(this.size)}
+              colorScale={this.computeColors()}
+              data={this.state.data}
+              standalone={false}
+              padding={scale(25)}
+              innerRadius={scale(70)}
+              events={[{
+                target: 'data',
+                eventHandlers: {
+                  onPressIn: this.onPeopleChartPressed,
+                },
+              }]}
+            />
+            <SvgText
+              textAnchor="middle"
+              verticalAnchor="middle"
+              x={scale(this.size / 2)}
+              y={scale(this.size / 2)}
+              height={scale(this.fontSize)}
+              fontSize={scale(this.fontSize)}
+              // fontFamily={RkTheme.current.fonts.family.regular}
+              // stroke={RkTheme.current.colors.text.base}
+              // fill={RkTheme.current.colors.text.base}
+              >
+              {this.state.data[this.state.selected].title}
+            </SvgText>
+          </Svg>
+        </View>
+        <View style={styles.legendContainer}>
+          {this.renderMarkdown()}
+        </View>
       </View>
-      <View style={styles.legendContainer}>
-        {this.renderMarkdown()}
-      </View>
-    </View>
-  );
+    )
+    else
+      return (<View></View>)
+  }
 }
 
 const styles = RkStyleSheet.create(() => ({

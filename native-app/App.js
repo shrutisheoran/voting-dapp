@@ -1,10 +1,11 @@
 import React from 'react';
-import { View, StatusBar } from 'react-native';
-import { createStackNavigator} from 'react-navigation'
+import { View, StatusBar, Platform } from 'react-native';
+import { createStackNavigator, createMaterialTopTabNavigator} from 'react-navigation'
 import Scanner from './components/Scanner'
 import Dashboard from './components/Dashboard'
 import HomeScreen from './components/HomeScreen'
 import SplashScreen from './components/SplashScreen'
+import DoughnutChart from './components/DoughnutChart'
 import {
   AppLoading,
   Font,
@@ -20,6 +21,41 @@ function AppStatusBar ({ backgroundColor, ...props }) {
     </View>
   )
 }
+
+const Tabs = createMaterialTopTabNavigator({
+  DoughnutChart: {
+    screen: DoughnutChart,
+    navigationOptions: {
+      tabBarLabel: 'Chart',
+      tabBarIcon: ({ tintColor }) => <Ionicons name='ios-bookmarks' size={30} color={tintColor}/>
+    }
+  },
+  Votings: {
+    screen: Dashboard,
+    navigationOptions: {
+      tabBarLabel: 'Votes',
+      tabBarIcon: ({ tintColor }) => <FontAwesome name='plus-square' size={30} color={tintColor}/>
+    }
+  }
+}, {
+  navigationOptions: {
+    header: null
+  },
+  tabBarOptions: {
+    activeTintColor: Platform.OS === 'ios' ? purple : white,
+    style: {
+      height: 56,
+      backgroundColor: Platform.OS === 'ios' ? white : purple,
+      shadowRadius: 6,
+      shadowOpacity: 1,
+      shadowColor: 'rgba(0,0,0,0.24)',
+      shadowOffset: {
+          width: 0,
+          height: 3,
+      },
+    }
+  }
+})
 
 const MainNavigator = createStackNavigator({
   Home: {
@@ -47,7 +83,7 @@ const MainNavigator = createStackNavigator({
     },
   },
   Dashboard: {
-    screen: Dashboard,
+    screen: Tabs,
     navigationOptions: {
       header: null,
     }
