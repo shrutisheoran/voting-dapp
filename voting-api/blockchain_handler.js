@@ -16,17 +16,15 @@ const initContract = () => {
 
 const getListOfCandidates = () => {
   let candidates = [];
-  return new Promise((resolve, reject) => {
-    resolve(bcInstance.candidates(1));
-  }).then(c1 => {
-    candidates.push(c1);
-    return new Promise((resolve, reject) => {
-      resolve(bcInstance.candidates(2));
-    }).then(c2 => {
-      candidates.push(c2);
-      return candidates;
+  const count = bcInstance.candidatesCount().toNumber();
+  for (let i = 1; i <= count; i++) {
+    new Promise((resolve, reject) => {
+      resolve(bcInstance.candidates(i));
+    }).then(c1 => {
+      candidates.push(c1);
     });
-  });
+  }
+  return candidates;
 };
 
 const vote = (candidateId, voterId, aadhar) => {

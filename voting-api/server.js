@@ -16,10 +16,6 @@ const upload = multer({
   // limits: { fileSize: 1000000, files: 1 }
 });
 
-const headers = {
-  Accept: "application/json"
-};
-
 app.use((req, res, next) => {
   const now = new Date().toString();
 
@@ -30,14 +26,40 @@ app.use((req, res, next) => {
 app.use(bodyParser.json());
 
 // CORS
-// app.use(function(req, res, next) {
-//   res.header("Access-Control-Allow-Origin", "*");
-//   res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-//   next();
-// });
+app.use(function(req, res, next) {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+  next();
+});
 
 app.get("/candidates", (req, res) => {
-  bc.getListOfCandidates().then(candidates => res.status(200).send(candidates));
+  new Promise((resolve, reject) => {
+    const candidates = bc.getListOfCandidates();
+    if (candidates) {
+      resolve(candidates);
+    }
+  }).then(data => {
+    data.forEach(i => {
+      i.shift();
+      i[1] = parseInt(i[1]);
+    });
+    res.status(200).send(data);
+  });
+});
+
+app.get("/votecount", (req, res) => {
+  new Promise((resolve, reject) => {
+    const candidates = bc.getListOfCandidates();
+    if (candidates) {
+      resolve(candidates);
+    }
+  }).then(data => {
+    data.forEach(i => {
+      i[0] = parseInt(i[0]);
+      i[2] = parseInt(i[2]);
+    });
+    res.status(200).send(data);
+  });
 });
 
 app.post("/vote", (req, res) => {
