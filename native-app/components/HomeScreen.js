@@ -33,26 +33,21 @@ export default class HomeScreen extends React.Component {
     ]
   }
   render() {
-    const { candidates, voter, onVote } = this.props.screenProps
+    const { candidates } = this.props.screenProps
 
     return (
       <ScrollView>
       <View style={styles.container}>
-        {/* <View style={styles.header}>
-          <Text style={{color: white, fontSize: 25, marginBottom: -10}}></Text>
-        </View> */}
         <TouchableOpacity
           style={styles.btn}
-          onPress={() => this.props.navigation.navigate('VotePage', {
-            candidates,
-            voter,
-            onVote
+          onPress={() => this.props.navigation.navigate('Scanner', {
+            candidates
           })}
         >
           <RkCard>
             <ImageBackground style={{height: '100%', width: '100%'}} resizeMode='cover' source={require('../img/icon.jpg')}>
               <View rkCardHeader style={{marginTop: '68%'}}>
-                <Text style={{fontSize: 20, color: '#23395B'}}>Vote</Text>
+                <Text style={{fontFamily: 'FjallaOne', fontSize: 30, color: '#23395B'}}>Vote</Text>
               </View>
             </ImageBackground>
           </RkCard>
@@ -66,7 +61,7 @@ export default class HomeScreen extends React.Component {
           <RkCard>
             <ImageBackground style={{height: '100%', width: '100%'}} resizeMode='cover'source={require('../img/m1.png')}>
               <View rkCardHeader style={{marginTop: '68%'}}>
-                <Text style={{fontSize: 20, color: white}}>Dashboard</Text>
+                <Text style={{fontFamily: 'FjallaOne', fontSize: 30, color: white}}>Dashboard</Text>
               </View>
             </ImageBackground>
           </RkCard>
@@ -82,15 +77,6 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-  },
-  header: {
-    backgroundColor: purple,
-    height: 70,
-    width: 500,
-    marginTop: -15,
-    marginBottom: 20,
-    justifyContent: 'center',
-    alignItems: 'center'
   },
   btn: {
     width: '85%',

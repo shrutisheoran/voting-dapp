@@ -31,10 +31,10 @@ export default class Dashboard extends Component{
                                 </Left>
                                 <Body>
                                 <Text>{elem[1]}</Text>
-                                <Text note numberOfLines={1}>CandidateId: {elem[0]}</Text>
+                                <Text style={{fontFamily: 'ArchivoNarrow'}} note numberOfLines={1}>CandidateId: {elem[0]}</Text>
                                 </Body>
                                 <Right>
-                                    <Text>Votes: {elem[2]}</Text>
+                                    <Text style={{fontFamily: 'ArchivoNarrow'}}>Votes: {elem[2]}</Text>
                                 </Right>
                             </ListItem>
                         ))

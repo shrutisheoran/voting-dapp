@@ -1,5 +1,5 @@
 import React from 'react';
-import { View } from 'react-native';
+import { View, Text } from 'react-native';
 import {
   RkComponent,
   RkText,
@@ -9,6 +9,8 @@ import {
 import { VictoryPie } from 'victory-native';
 import { Svg, Text as SvgText } from 'react-native-svg';
 import { scale } from '../utils/scale';
+import { Card } from 'native-base'
+import { AppLoading } from 'expo';
 
 export default class DoughnutChart extends RkComponent {
   state = {
@@ -51,52 +53,61 @@ export default class DoughnutChart extends RkComponent {
   render() {
     if(this.state.data.length)
       return (
-      <View>
-        <RkText rkType='header4'>ELECTION RESULTS</RkText>
-        <View style={{ alignSelf: 'center' }}>
-          <Svg width={scale(this.size)} height={scale(this.size)}>
-            <VictoryPie
-              labels={[]}
-              width={scale(this.size)}
-              height={scale(this.size)}
-              colorScale={this.computeColors()}
-              data={this.state.data}
-              standalone={false}
-              padding={scale(25)}
-              innerRadius={scale(70)}
-              events={[{
-                target: 'data',
-                eventHandlers: {
-                  onPressIn: this.onPeopleChartPressed,
-                },
-              }]}
-            />
-            <SvgText
-              textAnchor="middle"
-              verticalAnchor="middle"
-              x={scale(this.size / 2)}
-              y={scale(this.size / 2)}
-              height={scale(this.fontSize)}
-              fontSize={scale(this.fontSize)}
-              // fontFamily={RkTheme.current.fonts.family.regular}
-              // stroke={RkTheme.current.colors.text.base}
-              // fill={RkTheme.current.colors.text.base}
-              >
-              {this.state.data[this.state.selected].title}
-            </SvgText>
-          </Svg>
+        <View style={styles.container}>
+          <Text style={{fontFamily: 'FjallaOne', fontSize: 40, marginTop: 40}}>ELECTION RESULTS</Text>
+        <View style={{flex: 1, justifyContent: 'center', alignItems: 'center', marginTop: -20}}>
+        <Card style={{paddingLeft: 20, paddingRight: 20, paddingBottom: 20}}>
+            <Text></Text>
+            <View style={{ alignSelf: 'center' }}>
+              <Svg width={scale(this.size)} height={scale(this.size)}>
+                <VictoryPie
+                  labels={[]}
+                  width={scale(this.size)}
+                  height={scale(this.size)}
+                  colorScale={this.computeColors()}
+                  data={this.state.data}
+                  standalone={false}
+                  padding={scale(25)}
+                  innerRadius={scale(70)}
+                  events={[{
+                    target: 'data',
+                    eventHandlers: {
+                      onPressIn: this.onPeopleChartPressed,
+                    },
+                  }]}
+                />
+                <SvgText
+                  textAnchor="middle"
+                  verticalAnchor="middle"
+                  x={scale(this.size / 2)}
+                  y={scale(this.size / 2)}
+                  height={scale(this.fontSize)}
+                  fontSize={scale(this.fontSize)}
+                  // fontFamily={RkTheme.current.fonts.family.regular}
+                  // stroke={RkTheme.current.colors.text.base}
+                  // fill={RkTheme.current.colors.text.base}
+                  >
+                  {this.state.data[this.state.selected].title}
+                </SvgText>
+              </Svg>
+            </View>
+            <View style={styles.legendContainer}>
+              {this.renderMarkdown()}
+            </View>
+          </Card>
         </View>
-        <View style={styles.legendContainer}>
-          {this.renderMarkdown()}
         </View>
-      </View>
-    )
-    else
-      return (<View></View>)
+      )
+      else
+        return (<AppLoading/>)
   }
 }
 
 const styles = RkStyleSheet.create(() => ({
+  container: {
+    flex: 1,
+    alignItems: 'center',
+  },
   legendContainer: {
     flexDirection: 'row',
     flexWrap: 'wrap',

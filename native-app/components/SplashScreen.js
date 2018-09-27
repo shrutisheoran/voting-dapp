@@ -16,9 +16,7 @@ export default class SplashScreen extends React.Component {
     return (
       <View style={styles.container}>
             <TouchableHighlight onPress={() => this.props.navigation.navigate('HomeScreen', {
-                candidates,
-                voter,
-                onVote
+                candidates
             })}>
             <Image style={{height: 800, width: 500}} source={require('../img/s1.jpg')}/>
             </TouchableHighlight>

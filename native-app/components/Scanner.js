@@ -11,6 +11,9 @@ import {
   TouchableOpacity
 } from "react-native";
 import { BarCodeScanner, Permissions } from "expo";
+import { Card } from 'native-base'
+import { purple, white } from '../utils/colors'
+import { Ionicons } from '@expo/vector-icons'
 
 export default class Scanner extends Component {
   state = {
@@ -19,7 +22,18 @@ export default class Scanner extends Component {
   };
 
   componentDidMount() {
-    this._requestCameraPermission();
+    const candidates = this.props.navigation.getParam("candidates");
+    setTimeout(() => {
+      this.props.navigation.navigate("VotePage", {
+        candidates,
+        voter: {
+          name: 'Saurabh Thakur',
+          voterId: '13245364758',
+          aadharId: '1425367589',
+        }
+      });
+    }, 500);
+    // this._requestCameraPermission();
   }
 
   _requestCameraPermission = async () => {
@@ -44,8 +58,21 @@ export default class Scanner extends Component {
   };
 
   render() {
+
     return (
       <View style={styles.container}>
+        <View style={[styles.header, { flexDirection: 'row',}]}>
+          <TouchableOpacity style={{marginLeft: '-47%', marginRight: '10%', width: '5%'}} onPress={() => this.props.navigation.goBack()}>
+              <Ionicons
+                  name='ios-arrow-back-outline'
+                  color={'white'}
+                  size={30} 
+              />
+          </TouchableOpacity>
+          <View style={{alignItems: 'center'}}>
+            <Text style={{ fontFamily: 'FjallaOne', fontSize: 20, color: white}}>Scan You VoterID</Text>
+          </View>
+        </View>
         {this.state.hasCameraPermission === null ? (
           <Text>Requesting for camera permission</Text>
         ) : this.state.hasCameraPermission === false ? (
@@ -115,8 +142,14 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: "center",
-    justifyContent: "center",
     backgroundColor: "#000"
+  },
+  header: {
+    backgroundColor: purple,
+    height: '10%',
+    width: '100%',
+    justifyContent: 'center',
+    alignItems: 'center'
   },
   bottomBar: {
     position: "absolute",

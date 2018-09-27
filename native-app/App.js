@@ -27,7 +27,7 @@ const Tabs = createMaterialTopTabNavigator({
     screen: DoughnutChart,
     navigationOptions: {
       tabBarLabel: 'Chart',
-      tabBarIcon: ({ tintColor }) => <Ionicons name='ios-bookmarks' size={30} color={tintColor}/>
+      tabBarIcon: ({ tintColor }) => <Ionicons name='ios-bookmarks' size={30} color={tintColor}/>,
     }
   },
   Votings: {
@@ -114,7 +114,6 @@ export default class App extends React.Component {
         "https://images-na.ssl-images-amazon.com/images/I/51Mwpo7I72L._SX425_.jpg"
       ]
     ],
-    voter: {},
     isLoaded: false,
   }
 
@@ -124,6 +123,8 @@ export default class App extends React.Component {
 
   loadAssets = async () => {
     await Font.loadAsync({
+      'FjallaOne': require('./assets/fonts/Fjalla_One/FjallaOne-Regular.ttf'),
+      'ArchivoNarrow': require('./assets/fonts/Archivo_Narrow/ArchivoNarrow-Regular.ttf'),
       'Roboto': require('native-base/Fonts/Roboto.ttf'),
       'Roboto_medium': require('native-base/Fonts/Roboto_medium.ttf'),
     });
@@ -143,15 +144,6 @@ export default class App extends React.Component {
     });
   }
 
-  onVote = (id) => {
-    this.setState({
-      voter: {
-        ...this.state.voter,
-        candidateId: id
-      }
-    }, () => console.log(this.state));
-  }
-
   renderLoading = () => (
     <AppLoading />
   );
@@ -163,9 +155,6 @@ export default class App extends React.Component {
         <AppStatusBar backgroundColor={purple} barStyle='light-content'/>
         <MainNavigator screenProps={{
           candidates: this.state.candidates,
-          voter: this.state.voter,
-          onVote: (id) => this.onVote(id),
-          onIdentification: (voter) => this.onIdentification(voter)
         }}/>
       </View>
     );
