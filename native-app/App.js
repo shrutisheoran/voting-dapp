@@ -5,7 +5,11 @@ import Scanner from './components/Scanner'
 import Dashboard from './components/Dashboard'
 import HomeScreen from './components/HomeScreen'
 import SplashScreen from './components/SplashScreen'
-import { Constants } from 'expo'
+import {
+  AppLoading,
+  Font,
+  Constants
+} from 'expo';
 import { purple, white } from './utils/colors'
 import VotePage from './components/VotePage'
 
@@ -74,9 +78,26 @@ export default class App extends React.Component {
         "https://images-na.ssl-images-amazon.com/images/I/51Mwpo7I72L._SX425_.jpg"
       ]
     ],
-    voter: {}
+    voter: {},
+    isLoaded: false,
   }
 
+  componentWillMount() {
+    this.loadAssets();
+  }
+
+  loadAssets = async () => {
+    await Font.loadAsync({
+      'Roboto': require('native-base/Fonts/Roboto.ttf'),
+      'Roboto_medium': require('native-base/Fonts/Roboto_medium.ttf'),
+    });
+    this.setState({ isLoaded: true });
+  };
+
+   componentWillMount() {
+    this.loadAssets();
+  }
+  
   onIdentification = (voter) => {
     this.setState({
       voter: {
@@ -95,7 +116,11 @@ export default class App extends React.Component {
     }, () => console.log(this.state));
   }
 
-  render() {
+  renderLoading = () => (
+    <AppLoading />
+  );
+
+  renderApp() {
     const { candidates, voter } = this.state
     return (
       <View style={{flex: 1}}>
@@ -109,4 +134,6 @@ export default class App extends React.Component {
       </View>
     );
   }
+
+  render = () => (this.state.isLoaded ? this.renderApp() : this.renderLoading());
 }
