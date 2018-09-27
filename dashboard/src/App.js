@@ -5,7 +5,7 @@ import Dashboard from './components/Dashboard'
 import { Route } from 'react-router-dom'
 import FrontPage from './components/FrontPage'
 import VotingPage from './components/VotingPage'
-import Thankyou from './components/Thankyou'
+// import Thankyou from './components/Thankyou'
 
 class App extends Component {
   state = {
