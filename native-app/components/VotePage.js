@@ -69,7 +69,7 @@ export default class VotePage extends Component {
             }, 2000)
             return (
                 <View>
-                    <View style={[styles.header, {alignItems: 'flex-start'}]}>
+                    <View style={[styles.header, {alignItems: 'flex-start', height: '15%'}]}>
                         <TouchableOpacity style={{marginLeft: '5%'}} onPress={() => this.props.navigation.goBack()}>
                             <Ionicons
                                 name='ios-arrow-back-outline'
@@ -145,10 +145,8 @@ const styles = StyleSheet.create({
     },
     header: {
         backgroundColor: purple,
-        height: '15%',
+        height: '10%',
         width: '100%',
-        marginTop: -18,
-        marginBottom: 20,
         justifyContent: 'center',
         alignItems: 'center'
     },
