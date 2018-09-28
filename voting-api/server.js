@@ -114,9 +114,11 @@ function base64_encode(file) {
 app.post("/enroll", async function(req, resp) {
   const form = new formidable.IncomingForm();
   let aadhar;
+  let name;
   form.parse(req, (err, fields, files) => {
     console.log(fields);
     aadhar = fields.aadhar;
+    name = fields.name;
   });
 
   form.on("fileBegin", function(name, file) {
@@ -148,17 +150,21 @@ app.post("/enroll", async function(req, resp) {
       body: JSON.stringify(enrollBody),
       headers: headers
     });
-    // console.log(response);
-    resp.json(JSON.parse(response.data));
+    const voterId = "0x047CF52123f597E78311A790d2a71E5fA260Fbb8";
+    const qrcode = `https://api.qrserver.com/v1/create-qr-code/?data={"name":"${name}", "aadhar":${aadhar}, "voterId":"${voterId}"}`;
+    console.log(response);
+    resp.send({...JSON.parse(response), qrcode });
   });
 });
 
 app.post("/verify", async function(req, resp) {
   const form = new formidable.IncomingForm();
   let aadhar;
+  let name;
   form.parse(req, (err, fields, files) => {
     console.log("F"+JSON.stringify(fields, null, 4));
     aadhar = fields.aadhar;
+    name = fields.name;
   });
 
   form.on("fileBegin", function(name, file) {
