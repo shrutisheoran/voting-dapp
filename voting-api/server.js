@@ -3,8 +3,8 @@ const bodyParser = require("body-parser");
 const fs = require("fs");
 // const request = require("request");
 const multer = require("multer");
-const request = require('request-promise')
-const formidable = require('formidable')
+const request = require("request-promise");
+const formidable = require("formidable");
 
 const bc = require("./blockchain_handler");
 
@@ -106,24 +106,21 @@ app.post("/qrdata", upload.single("file"), (req, res) => {
   });
 });
 
-app.post("/enroll", (req, res) => {
-  const voterId = "0x10d34a87A0af97Ec8aab78A6F61368525C7bf017";
-  const { aadhar, name } = req.body;
-  res.status(200).send({
-    url: `https://api.qrserver.com/v1/create-qr-code/?data={"name":"${name}","aadhar":name","aadhar":${aadhar},"voterId":"${voterId}"}`
-  });
-});
-
 function base64_encode(file) {
   let bitmap = fs.readFileSync(file);
   return new Buffer(bitmap).toString("base64");
 }
 
-app.post("/api/enroll", async function(req, resp) {
+app.post("/enroll", async function(req, resp) {
   const form = new formidable.IncomingForm();
-  form.parse(req);
+  let aadhar;
+  form.parse(req, (err, fields, files) => {
+    console.log(fields);
+    aadhar = fields.aadhar;
+  });
 
   form.on("fileBegin", function(name, file) {
+    console.log("uploading");
     file.path = __dirname + "/uploads/hero.jpg";
   });
 
@@ -131,7 +128,8 @@ app.post("/api/enroll", async function(req, resp) {
     console.log("Uploaded " + file.name);
   });
 
-  form.on("field", async function(name, value) {
+  form.on("end", async function(err, fields, files) {
+    console.log(aadhar);
     let headers = {
       "Content-Type": "application/json",
       app_id: "e7d3bd5d",
@@ -140,7 +138,7 @@ app.post("/api/enroll", async function(req, resp) {
     let image = base64_encode(`./uploads/hero.jpg`);
     let enrollBody = {
       image: image,
-      subject_id: value,
+      subject_id: aadhar,
       gallery_name: "Voting2"
     };
 
@@ -151,15 +149,20 @@ app.post("/api/enroll", async function(req, resp) {
       headers: headers
     });
     // console.log(response);
-    resp.json(JSON.parse(response));
+    resp.json(JSON.parse(response.data));
   });
 });
 
-app.post("/api/verify", async function(req, resp) {
+app.post("/verify", async function(req, resp) {
   const form = new formidable.IncomingForm();
-  form.parse(req);
+  let aadhar;
+  form.parse(req, (err, fields, files) => {
+    console.log("F"+JSON.stringify(fields, null, 4));
+    aadhar = fields.aadhar;
+  });
 
   form.on("fileBegin", function(name, file) {
+    console.log("uploading");
     file.path = __dirname + "/uploads/hero.jpg";
   });
 
@@ -167,7 +170,8 @@ app.post("/api/verify", async function(req, resp) {
     console.log("Uploaded " + file.name);
   });
 
-  form.on("field", async function(name, value) {
+  form.on("end", async function(err, fields, files) {
+    console.log(aadhar);
     let headers = {
       "Content-Type": "application/json",
       app_id: "e7d3bd5d",
@@ -176,7 +180,7 @@ app.post("/api/verify", async function(req, resp) {
     let image = base64_encode(`./uploads/hero.jpg`);
     let enrollBody = {
       image: image,
-      subject_id: value,
+      subject_id: aadhar,
       gallery_name: "Voting2"
     };
 
