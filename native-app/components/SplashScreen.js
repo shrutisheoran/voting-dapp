@@ -3,13 +3,11 @@ import { StyleSheet, Text, View, TouchableHighlight, Image } from 'react-native'
 
 export default class SplashScreen extends React.Component {
   render() {
-    const { candidates, voter, onVote } = this.props.screenProps
+    const { candidates } = this.props.screenProps
 
     setTimeout(() => {
         this.props.navigation.navigate('HomeScreen', {
             candidates,
-            voter,
-            onVote
         })
     }, 1000)
 
