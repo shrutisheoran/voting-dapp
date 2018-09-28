@@ -19,9 +19,22 @@ class News extends Component {
     return (
       <div>
         <Row>
+            <Col
+              s={12}
+              m={12}
+              style={{
+                textAlign: "center",
+                backgroundColor: "#053449",
+                color: "white"
+              }}
+            >
+              <h2>Related News!</h2>
+            </Col>
+          </Row>
+        <Row>
           {Object.keys(this.state.data).length === 0 && (
-            <Row style={{ margin: "10% 10% 10% 10%" }}>
-              {/* <Col s={4} m={12} /> */}
+            <Row style={{ margin: "20% 0% 20% 40%" }}>
+              <Col s={4} m={12} />
               <Col s={4}>
                 <Preloader size="big" />
               </Col>
