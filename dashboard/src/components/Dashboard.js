@@ -2,17 +2,22 @@ import React, { Component } from "react";
 import { Table, tbody, thead, td, th, tr } from "react-materialize";
 import Chart from "react-google-charts";
 import { Row, Col } from "react-materialize";
+import * as api from "../utils/utils";
 
 class Dashboard extends Component {
-  state = [
-    [1, "Candidate 1", 342],
-    [2, "Candidate 2", 23],
-    [3, "Candidate 3", 456]
-  ];
+  state = {};
+
+  componentWillMount() {
+    api.getVotes().then(data => {
+      this.setState({ data });
+      let d = data.map(i => [i[1], i[2]]);
+      d.unshift(["Candidate", "Votes"]);
+      this.setState({ d });
+    });
+  }
 
   render() {
-    let data = this.state.map(i => [i[1], i[2]]);
-    data.unshift(["Candidate", "Votes"]);
+    const { data, d } = this.state;
     // console.log(data);
     const options = {
       title: "Voting Results",
@@ -45,26 +50,29 @@ class Dashboard extends Component {
               </thead>
 
               <tbody>
-                {this.state.map((row, index) => (
-                  <tr key={index}>
-                    {row.map((item, index) => (
-                      <td key={index}>{item}</td>
-                    ))}
-                  </tr>
-                ))}
+                {data &&
+                  data.map((row, index) => (
+                    <tr key={index}>
+                      {row.map((item, index) => (
+                        <td key={index}>{item}</td>
+                      ))}
+                    </tr>
+                  ))}
               </tbody>
             </Table>
           </Col>
-          <Col m={6} s={12}>
-            <Chart
-              chartType="PieChart"
-              style={{ marginTop: "10%" }}
-              width="100%"
-              height="400px"
-              data={data}
-              options={options}
-            />
-          </Col>
+          {data && (
+            <Col m={6} s={12}>
+              <Chart
+                chartType="PieChart"
+                style={{ marginTop: "10%" }}
+                width="100%"
+                height="400px"
+                data={d}
+                options={options}
+              />
+            </Col>
+          )}
         </Row>
       </div>
     );

@@ -38,6 +38,7 @@ class VotingPage extends Component {
                     <tr>
                       <th data-field="id">Id</th>
                       <th data-field="candidate">Candidate</th>
+                      <th data-field="choice">Choice</th>
                     </tr>
                   </thead>
 
@@ -75,9 +76,9 @@ class VotingPage extends Component {
         </div>
       );
     }
-    setTimeout(() => {
-      this.props.goBack();
-    }, 5000);
+    // setTimeout(() => {
+    //   this.props.goBack();
+    // }, 5000);
     return (
       <Row style={{ margin: "30% 30% 20% 30%" }}>
         {/* <Col s={4} m={12} /> */}

@@ -4,6 +4,9 @@ import { Row, Col } from "react-materialize";
 
 class Thankyou extends Component {
   render() {
+    setTimeout(() => {
+      window.open("/", "_self");
+    }, 5000);
     return (
       <div>
         <Row>
@@ -19,9 +22,6 @@ class Thankyou extends Component {
             <h2>Every Vote Matters!</h2>
           </Col>
         </Row>
-        {setTimeout(() => {
-          window.open("/", "_self");
-        }, 5000)}
         <Row style={{ marginTop: "10%" }}>
           <Col s={12} m={2} />
           <Col s={12} m={8}>
