@@ -12,7 +12,6 @@ class FrontPage extends Component {
           </Col>
         </Row>
         <Row style={{ marginTop: "7%" }}>
-          <Col m={3} s={0} className="grid-example" />
           <Col m={3} s={12} className="grid-example">
             <Link to="/scan" className="vote-link">
               <Card className="small vote-card" />
@@ -25,7 +24,18 @@ class FrontPage extends Component {
               <div className="small-header">Dashboard</div>
             </Link>
           </Col>
-          <Col m={3} s={0} className="grid-example" />
+          <Col m={3} s={0} className="grid-example">
+            <Link to="/news" className="news-link">
+              <Card className="small news-card" />
+              <div className="small-header">News</div>
+            </Link>
+          </Col>
+          <Col m={3} s={0} className="grid-example">
+            <Link to="/enrollment" className="small enrollment-card">
+              <Card className="small enrollment-card" />
+              <div className="small-header">Enrollment</div>
+            </Link>
+          </Col>
         </Row>
       </div>
     );

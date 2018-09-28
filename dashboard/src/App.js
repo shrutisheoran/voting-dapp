@@ -56,6 +56,8 @@ class App extends Component {
           )}
         />
         <Route exact path="/dashboard" render={() => <Dashboard />} />
+        <Route path="/news" render={() => <News />} />
+        <Route path="/enrollment" render={() => <Enrollment />} />
         <Route
           path="/vote"
           render={({ history }) => (
