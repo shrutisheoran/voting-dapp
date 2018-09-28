@@ -28,6 +28,19 @@ body {
   background-size: 100% 110%;
 }
 
+.news-card {
+  background-image: url("./news.png");
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
+}
+
+.enrollment-card {
+  background-image: url("./enroll.jpg");
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
+}
+
+
 .small-header {
   background-color: #053449;
   color: whitesmoke;
