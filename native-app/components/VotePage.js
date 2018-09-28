@@ -14,6 +14,7 @@ export default class VotePage extends Component {
     componentDidMount() {
         const candidates = this.props.navigation.getParam('candidates')
         const voter = this.props.navigation.getParam('voter')
+        console.log(voter)
         this.setState({
             votes: candidates.map((c) => ({[c[0]]: true})),
             voter: {

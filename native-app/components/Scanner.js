@@ -10,12 +10,13 @@ import {
   StyleSheet,
   TouchableOpacity
 } from "react-native";
-import { BarCodeScanner, Permissions } from "expo";
+import { Camera, Permissions } from "expo";
 import { purple, white } from '../utils/colors'
 import { Ionicons } from '@expo/vector-icons'
 
 export default class Scanner extends Component {
   state = {
+    text: 'Scan your voterId (QR Code)',
     hasCameraPermission: null,
     lastScannedUrl: null,
     uri: null,
@@ -46,9 +47,12 @@ export default class Scanner extends Component {
   _handleBarCodeRead = result => {
     if (result.data !== this.state.lastScannedUrl) {
       LayoutAnimation.spring();
-      this.setState({ lastScannedUrl: result.data });
-      this.props.navigation.goBack();
-      console.log(result.data);
+      this.setState({
+        lastScannedUrl: result.data,
+        text: 'Click Your Photograph' 
+      });
+      // this.props.navigation.goBack();
+      // console.log(result.data);
     }
   };
 
@@ -58,15 +62,23 @@ export default class Scanner extends Component {
       await this.camera.takePictureAsync()
       .then((result) => {
         // this.setState({uri: result.uri})
-        console.log(result)
+        console.log(result);
+        if(this.state.lastScannedUrl) {
+          const candidates = this.props.navigation.getParam("candidates");
+          const obj = this.state.lastScannedUrl;
+          const voter = {
+            name: obj.name,
+            aadhar: obj.aadhar,
+            voterId: obj.voterId
+          }
+          console.log(voter)
+          this.props.navigation.navigate("VotePage", {
+            candidates,
+            voter
+          });
+        }
       })
       .catch((err) => console.log(err));
-      const candidates = this.props.navigation.getParam("candidates");
-      const voter = this.state.lastScannedUrl;
-      this.props.navigation.navigate("VotePage", {
-          candidates,
-          voter
-      });
     }
   }
 
@@ -88,7 +100,7 @@ export default class Scanner extends Component {
               />
           </TouchableOpacity>
           <View style={{alignItems: 'center'}}>
-            <Text style={{ fontFamily: 'FjallaOne', fontSize: 20, color: white}}>Scan You VoterID</Text>
+            <Text style={{ fontFamily: 'FjallaOne', fontSize: 20, color: white}}>{this.state.text}</Text>
           </View>
         </View>
         {this.state.hasCameraPermission === null ? (
@@ -103,6 +115,7 @@ export default class Scanner extends Component {
           // />
           <View style={{flex: 1}}>
               <Camera 
+                type={Camera.Constants.Type.front}
                 style={{
                   height: Dimensions.get("window").height,
                   width: Dimensions.get("window").width
@@ -110,9 +123,6 @@ export default class Scanner extends Component {
                 ref={ref => { this.camera = ref; }}
                 onBarCodeScanned={(result) => this._handleBarCodeRead(result)}
               />
-              <TouchableOpacity style={styles.submitBtn} onPress={() => this.takePicture()}>
-                  <Text style={styles.submitBtnText}>Recognise Yourself</Text>
-              </TouchableOpacity>
           </View>
         )}
 
@@ -160,6 +170,9 @@ export default class Scanner extends Component {
         >
           <Text style={styles.cancelButtonText}>Cancel</Text>
         </TouchableOpacity>
+        <TouchableOpacity style={styles.submitBtn} onPress={() => this.takePicture()}>
+            <Text style={styles.submitBtnText}>Click</Text>
+        </TouchableOpacity>
       </View>
     );
   };
@@ -177,6 +190,27 @@ const styles = StyleSheet.create({
     width: '100%',
     justifyContent: 'center',
     alignItems: 'center'
+  },
+  submitBtn: {
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    right: 0,
+    backgroundColor: purple,
+    padding: 10,
+    paddingLeft: 30,
+    paddingRight: 30,
+    borderRadius: 2,
+    height: 40,
+    alignSelf: 'center',
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
+  submitBtnText: {
+      color: white,
+      fontSize: 15,
+      fontFamily: 'FjallaOne',
+      textAlign: 'center'
   },
   bottomBar: {
     position: "absolute",
