@@ -40,6 +40,12 @@ body {
   background-size: 100% 100%;
 }
 
+.candidate-card {
+  background-image: url("./components/electionCandidate.jpg");
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
+}
+
 .small-header {
   background-color: #053449;
   color: whitesmoke;
@@ -111,39 +117,4 @@ body {
   -webkit-transform: rotate(45deg);
   -ms-transform: rotate(45deg);
   transform: rotate(45deg);
-}
-
-.contact-avatar {
-  width: 60px;
-  height: 60px;
-  margin-right: 20px;
-  background-repeat: no-repeat;
-  background-size: cover;
-  border-radius: 50%;
-  flex-shrink: 0;
-}
-
-.contact-details {
-  padding-left: 20px;
-  border-left: 1px solid #eee;
-
-  flex: 1;
-  overflow: hidden;
-
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-}
-.contact-details p {
-  margin: 0;
-  min-width: 0;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.contact-list-item {
-  padding: 20px;
-  background: white;
-  display: flex;
 }

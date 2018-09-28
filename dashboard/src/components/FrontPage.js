@@ -24,7 +24,7 @@ class FrontPage extends Component {
               <div className="small-header">Dashboard</div>
             </Link>
           </Col>
-          <Col m={4} s={0} className="grid-example">
+          <Col m={4} s={12} className="grid-example">
             <Link to="/news" className="news-link">
               <Card className="small news-card" />
               <div className="small-header">News</div>
