@@ -1,8 +1,10 @@
 const express = require("express");
 const bodyParser = require("body-parser");
 const fs = require("fs");
-const request = require("request");
+// const request = require("request");
 const multer = require("multer");
+const request = require('request-promise')
+const formidable = require('formidable')
 
 const bc = require("./blockchain_handler");
 
@@ -28,7 +30,10 @@ app.use(bodyParser.json());
 // CORS
 app.use(function(req, res, next) {
   res.header("Access-Control-Allow-Origin", "*");
-  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+  res.header(
+    "Access-Control-Allow-Headers",
+    "Origin, X-Requested-With, Content-Type, Accept"
+  );
   next();
 });
 
@@ -98,6 +103,91 @@ app.post("/qrdata", upload.single("file"), (req, res) => {
         }
       );
     }
+  });
+});
+
+app.post("/enroll", (req, res) => {
+  const voterId = "0x10d34a87A0af97Ec8aab78A6F61368525C7bf017";
+  const { aadhar, name } = req.body;
+  res.status(200).send({
+    url: `https://api.qrserver.com/v1/create-qr-code/?data={"name":"${name}","aadhar":name","aadhar":${aadhar},"voterId":"${voterId}"}`
+  });
+});
+
+function base64_encode(file) {
+  let bitmap = fs.readFileSync(file);
+  return new Buffer(bitmap).toString("base64");
+}
+
+app.post("/api/enroll", async function(req, resp) {
+  const form = new formidable.IncomingForm();
+  form.parse(req);
+
+  form.on("fileBegin", function(name, file) {
+    file.path = __dirname + "/uploads/hero.jpg";
+  });
+
+  form.on("file", function(name, file) {
+    console.log("Uploaded " + file.name);
+  });
+
+  form.on("field", async function(name, value) {
+    let headers = {
+      "Content-Type": "application/json",
+      app_id: "e7d3bd5d",
+      app_key: "3fab1a41d71ebcf49b143b0b18e50b98"
+    };
+    let image = base64_encode(`./uploads/hero.jpg`);
+    let enrollBody = {
+      image: image,
+      subject_id: value,
+      gallery_name: "Voting2"
+    };
+
+    const response = await request({
+      url: "https://api.kairos.com/enroll",
+      method: "POST",
+      body: JSON.stringify(enrollBody),
+      headers: headers
+    });
+    // console.log(response);
+    resp.json(JSON.parse(response));
+  });
+});
+
+app.post("/api/verify", async function(req, resp) {
+  const form = new formidable.IncomingForm();
+  form.parse(req);
+
+  form.on("fileBegin", function(name, file) {
+    file.path = __dirname + "/uploads/hero.jpg";
+  });
+
+  form.on("file", function(name, file) {
+    console.log("Uploaded " + file.name);
+  });
+
+  form.on("field", async function(name, value) {
+    let headers = {
+      "Content-Type": "application/json",
+      app_id: "e7d3bd5d",
+      app_key: "3fab1a41d71ebcf49b143b0b18e50b98"
+    };
+    let image = base64_encode(`./uploads/hero.jpg`);
+    let enrollBody = {
+      image: image,
+      subject_id: value,
+      gallery_name: "Voting2"
+    };
+
+    const response = await request({
+      url: "https://api.kairos.com/verify",
+      method: "POST",
+      body: JSON.stringify(enrollBody),
+      headers: headers
+    });
+    console.log(response);
+    resp.json(JSON.parse(response));
   });
 });
 
