@@ -6,6 +6,8 @@ import { Route } from "react-router-dom";
 import FrontPage from "./components/FrontPage";
 import VotingPage from "./components/VotingPage";
 import * as api from "./utils/utils";
+import Enrollment from './components/Enrollment'
+import News from './components/news'
 // import Thankyou from './components/Thankyou'
 
 class App extends Component {

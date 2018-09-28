@@ -1,38 +1,30 @@
 import React, { Component } from "react";
 import { Row, Col, Input, Button } from "react-materialize";
-// import serializeForm from "form-serialize";
+import axios from 'axios'
 
 class Enrollment extends Component {
+
+  state = {selectedFile: null}
+
+  fileChangedHandler = (event) => {
+    this.setState({selectedFile: event.target.files[0]})
+  }
+
+  uploadHandler = () => {
+    const formData = new FormData()
+    formData.append('photo', this.state.selectedFile, this.state.selectedFile.name)
+    formData.append('aadhar', 123456)
+    axios.post('http://3eec3613.ngrok.io/api/enroll', formData)
+      .then(function(response) {
+        console.log(response)
+      })
+  }
+
   render() {
     return (
       <div>
-        <Row style={{ marginTop: "5%" }}>
-          <form>
-            <Row>
-              <Col s={12} m={4} />
-              <Col s={12} m={4}>
-                <input
-                  placeholder="Enter Your Aadhar"
-                  label=" Name"
-                  name="aadhar"
-                  type="number"
-                />
-              </Col>
-              <Col s={12} m={4} />
-            </Row>
-            <Row>
-              <Col s={12} m={4} />
-              <Col s={12} m={4}>
-                {/* <input type="file" label="File" name="photo" /> */}
-              </Col>
-              <Col s={12} m={4} />
-            </Row>
-            <Row>
-              {/* <input type="submit" /> */}
-              <input onClick={this.redirect()} type="Submit" />
-            </Row>
-          </form>
-        </Row>
+        <input type="file" onChange={this.fileChangedHandler} />
+        <button onClick={this.uploadHandler}>Upload!</button>
       </div>
     );
   }
