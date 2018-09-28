@@ -19,18 +19,16 @@ class Enrollment extends Component {
 
   nameChangeHandler = event => {
     this.setState({ name: event.target.value });
-    console.log(event.target.value);
   };
   uploadHandler = () => {
     const formData = new FormData();
     formData.append(
       "photo",
       this.state.selectedFile,
-      this.state.selectedFile.name,
-      this.state.name,
-      this.state.aadhar
+      this.state.selectedFile.name
     );
-    formData.append("aadhar", 123456);
+    formData.append("aadhar", this.state.aadhar);
+    formData.append("name", this.state.name);
     axios
       .post("http://3eec3613.ngrok.io/enroll", formData)
       .then(function(response) {
@@ -42,7 +40,7 @@ class Enrollment extends Component {
     return (
       <div>
         <Row>
-        <Row>
+          <Row>
             <Col
               s={12}
               m={12}
