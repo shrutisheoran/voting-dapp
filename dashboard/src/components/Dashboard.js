@@ -20,9 +20,21 @@ class Dashboard extends Component {
     };
     return (
       <div>
+        <Row>
+          <Col
+            s={12}
+            m={12}
+            style={{
+              textAlign: "center",
+              backgroundColor: "#053449",
+              color: "white"
+            }}
+          >
+            <h2>Voting Results</h2>
+          </Col>
+        </Row>
         <Row className="dashboard">
           <Col s={12} m={6} style={{ marginTop: "7%" }}>
-            <h1 style={{ margin: "20px 0px 10px 10px" }}>Voting Results</h1>
             <Table hoverable={true} centered={true} bordered={true}>
               <thead>
                 <tr>

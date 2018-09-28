@@ -6,6 +6,22 @@ class Thankyou extends Component {
   render() {
     return (
       <div>
+        <Row>
+          <Col
+            s={12}
+            m={12}
+            style={{
+              textAlign: "center",
+              backgroundColor: "#053449",
+              color: "white"
+            }}
+          >
+            <h2>Every Vote Matters!</h2>
+          </Col>
+        </Row>
+        {setTimeout(() => {
+          window.open("/", "_self");
+        }, 5000)}
         <Row style={{ marginTop: "10%" }}>
           <Col s={12} m={2} />
           <Col s={12} m={8}>

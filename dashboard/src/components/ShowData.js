@@ -6,15 +6,6 @@ class ShowData extends Component {
     const { name, aadhar, voterId } = this.props;
     return (
       <div>
-        {/* <Row>
-          <Col
-            s={12}
-            m={12}
-            style={{ textAlign: "center", backgroundColor: "#053449", color:"white"}}
-          >
-            <h2>{this.props.message}</h2>
-          </Col>
-        </Row> */}
         <Row style={{ marginTop: "5%" }}>
           <Col s={12} m={2} />
           <Col s={12} m={8}>

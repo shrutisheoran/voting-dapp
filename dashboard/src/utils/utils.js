@@ -1,4 +1,4 @@
-const apiURL = "http://localhost:3000";
+const apiURL = "http://3eec3613.ngrok.io";
 
 const headers = {
   Accept: "application/json"
@@ -7,7 +7,7 @@ const headers = {
 export const getCandidates = () =>
   fetch(`${apiURL}/candidates`, { headers }).then(res => res.json());
 
-// componentDidMount() {
+// componentDidMount() {http://3eec3613.ngrok.io
 //   api.getVotes().then(data => this.setState({data}));
 // }
 
