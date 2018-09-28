@@ -4,8 +4,8 @@ import { createStackNavigator, createMaterialTopTabNavigator} from 'react-naviga
 import Scanner from './components/Scanner'
 import Dashboard from './components/Dashboard'
 import HomeScreen from './components/HomeScreen'
-import SplashScreen from './components/SplashScreen'
 import DoughnutChart from './components/DoughnutChart'
+import TakePicture from './components/TakePicture'
 import {
   AppLoading,
   Font,
@@ -59,12 +59,6 @@ const Tabs = createMaterialTopTabNavigator({
 
 const MainNavigator = createStackNavigator({
   Home: {
-    screen: SplashScreen,
-    navigationOptions: {
-      header: null,
-    },
-  },
-  HomeScreen: {
     screen: HomeScreen,
     navigationOptions: {
       header: null,
@@ -72,6 +66,12 @@ const MainNavigator = createStackNavigator({
   },
   Scanner: {
     screen: Scanner,
+    navigationOptions: {
+      header: null,
+    },
+  },
+  TakePicture: {
+    screen: TakePicture,
     navigationOptions: {
       header: null,
     },

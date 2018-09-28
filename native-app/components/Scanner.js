@@ -11,29 +11,29 @@ import {
   TouchableOpacity
 } from "react-native";
 import { BarCodeScanner, Permissions } from "expo";
-import { Card } from 'native-base'
 import { purple, white } from '../utils/colors'
 import { Ionicons } from '@expo/vector-icons'
 
 export default class Scanner extends Component {
   state = {
     hasCameraPermission: null,
-    lastScannedUrl: null
+    lastScannedUrl: null,
+    uri: null,
   };
 
   componentDidMount() {
     const candidates = this.props.navigation.getParam("candidates");
-    setTimeout(() => {
-      this.props.navigation.navigate("VotePage", {
-        candidates,
-        voter: {
-          name: 'Saurabh Thakur',
-          voterId: '13245364758',
-          aadharId: '1425367589',
-        }
-      });
-    }, 500);
-    // this._requestCameraPermission();
+    // setTimeout(() => {
+    //   this.props.navigation.navigate("TakePicture", {
+    //     candidates,
+    //     voter: {
+    //       name: 'Saurabh Thakur',
+    //       voterId: '13245364758',
+    //       aadhar: '1425367589',
+    //     },
+    //   });
+    // }, 200);
+    this._requestCameraPermission();
   }
 
   _requestCameraPermission = async () => {
@@ -46,19 +46,37 @@ export default class Scanner extends Component {
   _handleBarCodeRead = result => {
     if (result.data !== this.state.lastScannedUrl) {
       LayoutAnimation.spring();
-      const candidates = this.props.navigation.getParam("candidates");
-      // const voter = this.props.navigation.getParam("voter");
       this.setState({ lastScannedUrl: result.data });
       this.props.navigation.goBack();
-      this.props.navigation.navigate("VotePage", {
-        candidates,
-        voter: result.data
-      });
+      console.log(result.data);
     }
   };
 
-  render() {
+  takePicture = async function() {
+    if (this.camera) {
+      console.log("Taking Picture");
+      await this.camera.takePictureAsync()
+      .then((result) => {
+        // this.setState({uri: result.uri})
+        console.log(result)
+      })
+      .catch((err) => console.log(err));
+      const candidates = this.props.navigation.getParam("candidates");
+      const voter = this.state.lastScannedUrl;
+      this.props.navigation.navigate("VotePage", {
+          candidates,
+          voter
+      });
+    }
+  }
 
+  render() {
+    // if(this.state.uri!=null) {
+    //   return (
+    //     <Image style={{height: 400, width: 400}} source={{uri: this.state.uri}}/>
+    //   )
+    // }
+    // else
     return (
       <View style={styles.container}>
         <View style={[styles.header, { flexDirection: 'row',}]}>
@@ -80,13 +98,22 @@ export default class Scanner extends Component {
             Camera permission is not granted
           </Text>
         ) : (
-          <BarCodeScanner
-            onBarCodeRead={this._handleBarCodeRead}
-            style={{
-              height: Dimensions.get("window").height,
-              width: Dimensions.get("window").width
-            }}
-          />
+          // <BarCodeScanner
+          //   onBarCodeRead={this._handleBarCodeRead}
+          // />
+          <View style={{flex: 1}}>
+              <Camera 
+                style={{
+                  height: Dimensions.get("window").height,
+                  width: Dimensions.get("window").width
+                }}
+                ref={ref => { this.camera = ref; }}
+                onBarCodeScanned={(result) => this._handleBarCodeRead(result)}
+              />
+              <TouchableOpacity style={styles.submitBtn} onPress={() => this.takePicture()}>
+                  <Text style={styles.submitBtnText}>Recognise Yourself</Text>
+              </TouchableOpacity>
+          </View>
         )}
 
         {this._maybeRenderUrl()}

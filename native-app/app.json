@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "voting-native-app",
+    "name": "Voting DApp",
     "description": "This project is really great.",
     "slug": "vote-dapp",
     "privacy": "public",
@@ -8,12 +8,18 @@
     "platforms": ["ios", "android"],
     "version": "1.0.0",
     "orientation": "portrait",
+    "icon": "./assets/icon.png",
     "updates": {
       "fallbackToCacheTimeout": 0
     },
     "assetBundlePatterns": [
       "**/*"
     ],
+    "splash": {
+      "backgroundColor": "#fff",
+      "resizeMode": "cover",
+      "image": "./assets/splash.png"
+    },
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.hackathon.votingiosdapp"

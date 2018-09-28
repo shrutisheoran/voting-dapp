@@ -63,7 +63,7 @@ export default class VotePage extends Component {
         const candidates = this.props.navigation.getParam('candidates')
         if(this.state.voter.candidateId) {
             setTimeout(() => {
-                this.props.navigation.navigate('HomeScreen', {
+                this.props.navigation.navigate('Home', {
                     candidates
                 })
             }, 2000)
