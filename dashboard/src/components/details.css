@@ -1,0 +1,137 @@
+@import url('https://fonts.googleapis.com/css?family=Roboto:300,400');
+
+/*
+$bgLight: #424756;
+$bgDark: #1d1e21;
+*/
+
+$bgLight: rgba(0, 0, 0, .1);
+$bgDark: rgba(0, 0, 0, .1);
+$bgCircularStyle: circle at top;
+
+li.card {
+  background-color: white;
+  width: 250px;
+  padding: 20px;
+  border-radius: 5px;
+  overflow: hidden;
+  z-index: 1;
+}
+
+li#checked,
+li#checked:hover {
+  box-shadow: 3px 3px 10px rgba(0, 0, 0, .4);
+  width: 270px;
+  transform: translate(-10px,-20px);
+}
+
+li.card img {
+  border: 4px solid white;
+  box-shadow: 0 0 20px rgba(0, 0, 0, .2);
+  width: 200px;
+  height: 200px;
+  object-fit: cover;
+  border-radius: 200px;
+  margin: auto;
+}
+
+li#checked  img {
+  width: 100px;
+  height: 100px;
+}
+
+li.card h1,
+li.card h2,
+li.card p {
+  font-family: roboto, sans-serif;
+  font-weight: 300;
+}
+
+li.card h1 {
+  font-size: 1.5em;
+  margin: 20px 0 5px 0;
+  cursor: default;
+}
+
+li.card h2 {
+  font-size: 1.0em;
+  color: rgb(150, 150, 150);
+  visibility: hidden;
+  opacity: 0;
+  max-height: 0;
+  margin: 0;
+}
+
+li#checked h2 {
+  visibility: visible;
+  opacity: 1;
+  max-height: 300px;
+  margin: 0 0 10px 0;
+  transition-delay: 0s;
+  cursor: default;
+}
+
+li.card p {
+  font-size: .9em;
+  font-weight: 300;
+  color: rgba(0,0,0,.8);
+  visibility: hidden;
+  opacity: 0;
+  max-height: 0;
+}
+
+li#checked p {
+  visibility: visible;
+  opacity: 1;
+  max-height: 4000px;
+  transition-delay: 0s;
+  cursor: default;
+}
+
+li.card:hover {
+   box-shadow: 1px 1px 10px rgba(0, 0, 0, .2);
+}
+
+/********* page stuff ******/
+
+*,
+*:before,
+*:after {
+  box-sizing: inherit;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  transition: all 300ms ease-in-out;
+}
+
+html {
+  box-sizing: border-box;
+  height: 100%;
+}
+
+body {
+  background-color: #1d1e21;
+  background: -webkit-radial-gradient($bgCircularStyle, $bgLight, $bgDark);
+  background: -o-radial-gradient($bgCircularStyle, $bgLight, $bgDark);
+  background: -moz-radial-gradient($bgCircularStyle, $bgLight, $bgDark);
+  background: radial-gradient($bgCircularStyle, $bgLight, $bgDark);
+  text-align: center;
+}
+
+ul {
+  width: 900px;
+  margin: 20px auto auto auto;
+}
+
+ul>li.card {
+  margin: 20px;
+}
+
+.logo {
+  position: fixed;
+  right: 10px;
+  bottom: 10px;
+  border-radius: 50px;
+}

@@ -3,66 +3,40 @@ import { View, StyleSheet, TouchableOpacity } from 'react-native'
 import { List, ListItem, Thumbnail, Text, Left, Body, Right, Button } from 'native-base';
 import { purple, white } from '../utils/colors'
 import { Ionicons } from '@expo/vector-icons'
+import * as api from '../utils/utils'
 
 export default class VotePage extends Component {
     state = {
-        votes: [],
+        votes: true,
         value: 0,
-        text: 'Vote',
-        voter: {}
-    }
-    componentDidMount() {
-        const candidates = this.props.navigation.getParam('candidates')
-        const voter = this.props.navigation.getParam('voter')
-        console.log(voter)
-        this.setState({
-            votes: candidates.map((c) => ({[c[0]]: true})),
-            voter: {
-                ...voter,
-                candidateId: 0
-            }
-        })
+        submit: false
     }
 
     onVote = () => {
         const id = this.state.value
+        const voter = this.props.navigation.getParam("voter");
         if (id === 0)
             alert("Please VOTE!!")
         else {
-            this.setState({
-                voter: {
-                ...this.state.voter,
-                candidateId: id
-                }
-            }, () => console.log(this.state));
+            this.setState({submit: true})
+            api.postVote(voter.voterId, voter.aadhar, id)
+                .then(res => console.log(res));
         }
     }
 
     onSelection = (value) => {
         this.setState({value})
-        this.setState((state) => ({
-            votes: state.votes.map((elem) => {
-                const id = Object.keys(elem)[0];
-                return id!==value ? {[id]: false}: {[id]: true}
-            })
-        }))
+        this.setState({ votes: false })
     }
 
     onReset = () => {
-        this.setState((state) => ({
-            votes: state.votes.map((elem) => ({[Object.keys(elem)[0]]: true}))
-        }))
+        this.setState({ votes: true })
         this.setState({value: 0})
-    }
-
-    display = (id) => {
-        const obj = this.state.votes.filter((vote) => Object.keys(vote)[0]===id)[0];
-        return obj? obj[id] : false
     }
 
     render() {
         const candidates = this.props.navigation.getParam('candidates')
-        if(this.state.voter.candidateId) {
+        if(this.state.submit) {
             setTimeout(() => {
                 this.props.navigation.navigate('Home', {
                     candidates
@@ -99,26 +73,26 @@ export default class VotePage extends Component {
                 </View>
                 <List>
                     {
-                        candidates.map((elem) => (
+                        candidates.map((elem) =>  (
                             <ListItem thumbnail key={elem[0]}>
                                 <Left>
                                 <Thumbnail square source={{ uri: elem[2] }} />
                                 </Left>
                                 <Body>
                                 <Text>{elem[1]}</Text>
-                                <Text note numberOfLines={1}>CandidateId: {elem[0]}</Text>
+                                <Text note numberOfLines={1}>CandidateId: {elem[0].toString()}</Text>
                                 </Body>
                                 <Right>
                                     {
-                                        this.display(elem[0])
+                                        this.state.votes
                                         ?<Button transparent onPress={() => this.onSelection(elem[0])}>
-                                            <Text style={{fontFamily: 'FjallaOne'}}>{this.state.text}</Text>
+                                            <Text style={{fontFamily: 'FjallaOne'}}>Vote</Text>
                                         </Button>
                                         : <Text></Text>
                                     }
                                 </Right>
-                            </ListItem>
-                        ))
+                            </ListItem>)
+                        )
                     }
                 </List>
                 <View style={styles.btnView}>

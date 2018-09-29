@@ -6,6 +6,7 @@ import Dashboard from './components/Dashboard'
 import HomeScreen from './components/HomeScreen'
 import DoughnutChart from './components/DoughnutChart'
 import TakePicture from './components/TakePicture'
+import * as api from './utils/utils'
 import {
   AppLoading,
   Font,
@@ -92,33 +93,27 @@ const MainNavigator = createStackNavigator({
 
 export default class App extends React.Component {
   state = {
-    candidates: [
-      [
-        "1",
-        "Candidate 1",
-        "https://images.vexels.com/media/users/3/136532/isolated/preview/93b5c734e3776dd11f18ca2c42c54000-owl-round-icon-by-vexels.png"
-      ],
-      [
-        "2",
-        "Candidate 2",
-        "http://clipart-library.com/images/LTdojebac.jpg"
-      ],
-      [
-        "3",
-        "Candidate 3",
-        "https://cdn4.iconfinder.com/data/icons/school-education-14/512/Icon_51-512.png"
-      ],
-      [
-        "4",
-        "Candidate 4",
-        "https://images-na.ssl-images-amazon.com/images/I/51Mwpo7I72L._SX425_.jpg"
-      ]
-    ],
+    candidates: [],
     isLoaded: false,
   }
 
   componentWillMount() {
     this.loadAssets();
+  }
+
+  componentDidMount() {
+    const image_URLs = [
+      "https://images.vexels.com/media/users/3/136532/isolated/preview/93b5c734e3776dd11f18ca2c42c54000-owl-round-icon-by-vexels.png",
+      "http://clipart-library.com/images/LTdojebac.jpg",
+      "https://cdn4.iconfinder.com/data/icons/school-education-14/512/Icon_51-512.png",
+      "https://images-na.ssl-images-amazon.com/images/I/51Mwpo7I72L._SX425_.jpg"
+    ]
+    api.getCandidates().then(data => this.setState({
+      candidates: data.map((d, index) => {
+        d.push(image_URLs[index])
+        return d;
+      })
+    }));
   }
 
   loadAssets = async () => {
@@ -134,22 +129,13 @@ export default class App extends React.Component {
    componentWillMount() {
     this.loadAssets();
   }
-  
-  onIdentification = (voter) => {
-    this.setState({
-      voter: {
-        ...voter,
-        candidateId: 0,
-      }
-    });
-  }
 
   renderLoading = () => (
     <AppLoading />
   );
 
   renderApp() {
-    const { candidates, voter } = this.state
+    
     return (
       <View style={{flex: 1}}>
         <AppStatusBar backgroundColor={purple} barStyle='light-content'/>
@@ -160,5 +146,5 @@ export default class App extends React.Component {
     );
   }
 
-  render = () => (this.state.isLoaded ? this.renderApp() : this.renderLoading());
+  render = () => (this.state.isLoaded && this.state.candidates.length ? this.renderApp() : this.renderLoading());
 }

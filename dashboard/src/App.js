@@ -6,8 +6,9 @@ import { Route } from "react-router-dom";
 import FrontPage from "./components/FrontPage";
 import VotingPage from "./components/VotingPage";
 import * as api from "./utils/utils";
-import Enrollment from './components/Enrollment'
-import News from './components/news'
+import Enrollment from "./components/Enrollment";
+import News from "./components/news";
+import CandidateDetails from "./components/CandidateDetails";
 // import Thankyou from './components/Thankyou'
 
 class App extends Component {
@@ -60,6 +61,7 @@ class App extends Component {
         <Route exact path="/dashboard" render={() => <Dashboard />} />
         <Route path="/news" render={() => <News />} />
         <Route path="/enrollment" render={() => <Enrollment />} />
+        <Route path="/details" render={() => <CandidateDetails />} />
         <Route
           path="/vote"
           render={({ history }) => (

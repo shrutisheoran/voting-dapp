@@ -40,6 +40,11 @@ body {
   background-size: 100% 100%;
 }
 
+.candidate-card {
+  background-image: url("./components/electionCandidate.jpg");
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
+}
 
 .small-header {
   background-color: #053449;
