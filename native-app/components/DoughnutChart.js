@@ -11,26 +11,41 @@ import { Svg, Text as SvgText } from 'react-native-svg';
 import { scale } from '../utils/scale';
 import { Card } from 'native-base'
 import { AppLoading } from 'expo';
+import * as api from '../utils/utils'
 
 export default class DoughnutChart extends RkComponent {
   state = {
     selected: 0,
-    data: []
+    data: [],
+    candidates: []
   };
   size = 300;
   fontSize = 15;
 
   componentDidMount() {
-    const candidates = this.props.navigation.getParam('candidates')
-    const colors = ['#ff6b5d', '#8b98ff', '#c2d521', '#ffd147']
-    const data = candidates.map((candidate, index) => ({
-        x: candidate[0],
-        y: candidate[2],
-        title: `${candidate[1]}: ${candidate[2]}`,
-        name: candidate[1],
-        color: colors[index],
+    const image_URLs = [
+      "https://images.vexels.com/media/users/3/136532/isolated/preview/93b5c734e3776dd11f18ca2c42c54000-owl-round-icon-by-vexels.png",
+      "http://clipart-library.com/images/LTdojebac.jpg",
+      "https://cdn4.iconfinder.com/data/icons/school-education-14/512/Icon_51-512.png",
+      "https://images-na.ssl-images-amazon.com/images/I/51Mwpo7I72L._SX425_.jpg"
+    ]
+    api.getVotes().then(data => this.setState({
+      candidates: data.map((d, index) => {
+        d.push(image_URLs[index])
+        return d;
+      })
+    }, () =>{
+      const { candidates } = this.state
+      const colors = ['#ff6b5d', '#8b98ff', '#c2d521', '#ffd147']
+      const data = candidates.map((candidate, index) => ({
+          x: candidate[0],
+          y: candidate[2],
+          title: `${candidate[1]}: ${candidate[2]}`,
+          name: candidate[1],
+          color: colors[index],
+      }));
+      this.setState({data})
     }));
-    this.setState({data})
   }
 
   computeColors = () => this.state.data.map(i => i.color);
