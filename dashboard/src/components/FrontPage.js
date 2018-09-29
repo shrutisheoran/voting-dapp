@@ -11,7 +11,7 @@ class FrontPage extends Component {
             <h1 className="title">VOTE INDIA</h1>
           </Col>
         </Row>
-        <Row style={{ marginTop: "7%" }}>
+        <Row style={{ marginTop: "7%",margin:"0 20%"}}>
           <Col m={4} s={12} className="grid-example">
             <Link to="/scan" className="vote-link">
               <Card className="small vote-card" />
@@ -31,7 +31,7 @@ class FrontPage extends Component {
             </Link>
           </Col>
         </Row>
-        <Row>
+        <Row style={{ margin: '0 14%'}}>
           <Col m={2} s={12} />
           <Col m={4} s={0} className="grid-example">
             <Link to="/enrollment" className="small enrollment-card">
