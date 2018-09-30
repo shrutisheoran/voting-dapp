@@ -71,9 +71,11 @@ app.post("/vote", (req, res) => {
   const { voterId, candidateId, aadhar } = req.body;
   bc.vote(candidateId, voterId, aadhar)
     .then(data => {
+      console.log(data)
       res.status(200).send({ data: data });
     })
     .catch(err => {
+      console.log(err);
       res.status(500).send({ error: err + "" });
     });
 });
@@ -190,13 +192,13 @@ app.post("/verify", async function(req, resp) {
       gallery_name: "Voting2"
     };
 
-    // const response = await request({
-    //   url: "https://api.kairos.com/verify",
-    //   method: "POST",
-    //   body: JSON.stringify(enrollBody),
-    //   headers: headers
-    // });
-    const response = `{"images":[{"transaction":{"confidence":0.82409,"enrollment_timestamp":"20180928144848","eyeDistance":442,"face_id":"ae4d5b71f46a4443a2f","gallery_name":"Voting2","height":1114,"pitch":1,"quality":1.02605,"roll":-4,"status":"success","subject_id":"12345679012","topLeftX":396,"topLeftY":292,"width":899,"yaw":6}}]}`;
+    const response = await request({
+      url: "https://api.kairos.com/verify",
+      method: "POST",
+      body: JSON.stringify(enrollBody),
+      headers: headers
+    });
+    // const response = `{"images":[{"transaction":{"confidence":0.82409,"enrollment_timestamp":"20180928144848","eyeDistance":442,"face_id":"ae4d5b71f46a4443a2f","gallery_name":"Voting2","height":1114,"pitch":1,"quality":1.02605,"roll":-4,"status":"success","subject_id":"12345679012","topLeftX":396,"topLeftY":292,"width":899,"yaw":6}}]}`;
     console.log(response);
     resp.json(JSON.parse(response));
   });

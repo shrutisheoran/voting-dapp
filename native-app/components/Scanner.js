@@ -22,7 +22,8 @@ export default class Scanner extends Component {
     hasCameraPermission: null,
     lastScannedUrl: null,
     loader: false,
-    showData: false
+    showData: false,
+    type: Camera.Constants.Type.back
   };
 
   componentDidMount() {
@@ -43,6 +44,7 @@ export default class Scanner extends Component {
         lastScannedUrl: result.data,
         text: 'Click Your Photograph',
         showData: true,
+        type: Camera.Constants.Type.front
       });
     }
   };
@@ -56,6 +58,7 @@ export default class Scanner extends Component {
       name: `photo.${fileType}`,
       type: `image/${fileType}`,
     });
+    console.log(aadhar+"AADHAR");
     formData.append('aadhar', aadhar )
     const options = {
       method: 'POST',
@@ -134,7 +137,7 @@ export default class Scanner extends Component {
           ) : (
                 <View style={{ flex: 1 }}>
                   <Camera
-                    type={Camera.Constants.Type.front}
+                    type={this.state.type}
                     style={{
                       height: Dimensions.get("window").height,
                       width: Dimensions.get("window").width
